@@ -1,37 +1,26 @@
-﻿using Microsoft.VisualBasic.Logging;
-using SynCraftClient.Models;
+﻿using SynCraftClient.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SynCraftClient.Controllers
 {
     internal class ServerController
     {
-        private Server ServerView = new();
+        private readonly Server ServerView = new();
 
         public void Connect()
         {
             LogsController.Info("Trying to connect to the server: " + Settings.ServerAddress + ":" + Settings.ServerPort);
 
-            try
-            {
-                ServerView.Client = new TcpClient(Settings.ServerAddress, Settings.ServerPort);
-                ServerView.DataStream = ServerView.Client.GetStream();
+            ServerView.Client = new TcpClient(Settings.ServerAddress, Settings.ServerPort);
+            ServerView.DataStream = ServerView.Client.GetStream();
 
-                ServerView.IpPort = ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Address.ToString() + 
-                    ":" + ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Port.ToString();
+            ServerView.IpPort = ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Address.ToString() + 
+                ":" + ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Port.ToString();
 
-                LogsController.Info("Connected to server: " + ServerView.IpPort);
-            }
-            catch (Exception ex)
-            {
-                LogsController.Error("Error while connecting to the server: " + ex.Message);
-            }
+            LogsController.Info("Connected to server: " + ServerView.IpPort);
         }
 
         public void Disconnect()
