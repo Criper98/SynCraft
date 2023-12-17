@@ -3,7 +3,7 @@
     internal class Settings
     {
         public static int ServerPort;
-        public static string? ServerAddress;
+        public static string ServerAddress;
 
         public static bool SyncMods;
         public static bool SyncConfig;

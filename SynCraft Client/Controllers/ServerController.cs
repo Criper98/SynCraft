@@ -49,24 +49,9 @@ namespace SynCraftClient.Controllers
 
         public void RecvString(out string data)
         {
-            data = "";
+            RecvBytes(out byte[] bytes);
 
-            try
-            {
-                byte[] bytes = new byte[4];
-
-                int byteSize = ServerView.DataStream.Read(bytes, 0, bytes.Length);
-                int stringSize = BitConverter.ToInt32(bytes, 0);
-
-                bytes = new byte[stringSize];
-                byteSize = ServerView.DataStream.Read(bytes, 0, bytes.Length);
-
-                data = Encoding.UTF8.GetString(bytes, 0, byteSize);
-            }
-            catch (Exception ex)
-            {
-                LogsController.Error("Error while receiving data from the server: " + ex.Message);
-            }
+            data = Encoding.UTF8.GetString(bytes);
         }
 
         public void RecvBytes(out byte[] data)
@@ -75,11 +60,19 @@ namespace SynCraftClient.Controllers
 
             try
             {
-                ServerView.DataStream.Read(data, 0, data.Length);
-                int dataSize = BitConverter.ToInt32(data, 0);
+				ServerView.DataStream.Read(data, 0, data.Length);
+                int arraySize = BitConverter.ToInt32(data, 0);
 
-                data = new byte[dataSize];
-                ServerView.DataStream.Read(data, 0, data.Length);
+                data = new byte[arraySize];
+
+				int recvBytes = ServerView.DataStream.Read(data, 0, data.Length);
+
+				while (arraySize != recvBytes)
+				{
+					arraySize -= recvBytes;
+
+					recvBytes = ServerView.DataStream.Read(data, recvBytes, data.Length - recvBytes);
+				}
             }
             catch (Exception ex)
             {
