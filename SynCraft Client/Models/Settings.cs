@@ -11,7 +11,7 @@
         public static bool SyncShaders;
         public static bool SyncKeymap;
 
-        public static string? MinecraftPath;
+        public static string MinecraftPath;
 
         public static bool LogToFile;
     }

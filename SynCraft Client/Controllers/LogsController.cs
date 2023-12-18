@@ -30,7 +30,6 @@ namespace SynCraftClient.Controllers
                 "[INFO]: " + message;
 
             Logs.All += finalLog + "\n";
-            //Logs.Queue?.Add(finalLog);
 
             if (Settings.LogToFile)
                 Task.Run(() => WriteToFile(finalLog));

@@ -8,25 +8,25 @@ namespace SynCraftClient.Controllers
 {
     internal class ServerController
     {
-        private readonly Server ServerView = new();
+        private readonly Server ServerModel = new();
 
         public void Connect()
         {
             LogsController.Info("Trying to connect to the server: " + Settings.ServerAddress + ":" + Settings.ServerPort);
 
-            ServerView.Client = new TcpClient(Settings.ServerAddress, Settings.ServerPort);
-            ServerView.DataStream = ServerView.Client.GetStream();
+            ServerModel.Client = new TcpClient(Settings.ServerAddress, Settings.ServerPort);
+            ServerModel.DataStream = ServerModel.Client.GetStream();
 
-            ServerView.IpPort = ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Address.ToString() + 
-                ":" + ((IPEndPoint)ServerView.Client.Client.RemoteEndPoint).Port.ToString();
+            ServerModel.IpPort = ((IPEndPoint)ServerModel.Client.Client.RemoteEndPoint).Address.ToString() + 
+                ":" + ((IPEndPoint)ServerModel.Client.Client.RemoteEndPoint).Port.ToString();
 
-            LogsController.Info("Connected to server: " + ServerView.IpPort);
+            LogsController.Info("Connected to server: " + ServerModel.IpPort);
         }
 
         public void Disconnect()
         {
-            ServerView.DataStream.Close();
-            ServerView.Client.Close();
+            ServerModel.DataStream.Close();
+            ServerModel.Client.Close();
 
             LogsController.Info("Disconnected from server");
         }
@@ -37,9 +37,9 @@ namespace SynCraftClient.Controllers
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(message);
 
-                ServerView.DataStream.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+                ServerModel.DataStream.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
 
-                ServerView.DataStream.Write(bytes, 0, bytes.Length);
+                ServerModel.DataStream.Write(bytes, 0, bytes.Length);
             }
             catch (Exception ex)
             {
@@ -60,18 +60,18 @@ namespace SynCraftClient.Controllers
 
             try
             {
-				ServerView.DataStream.Read(data, 0, data.Length);
+                ServerModel.DataStream.Read(data, 0, data.Length);
                 int arraySize = BitConverter.ToInt32(data, 0);
 
                 data = new byte[arraySize];
 
-				int recvBytes = ServerView.DataStream.Read(data, 0, data.Length);
+				int recvBytes = ServerModel.DataStream.Read(data, 0, data.Length);
 
 				while (arraySize != recvBytes)
 				{
 					arraySize -= recvBytes;
 
-					recvBytes = ServerView.DataStream.Read(data, recvBytes, data.Length - recvBytes);
+					recvBytes = ServerModel.DataStream.Read(data, recvBytes, data.Length - recvBytes);
 				}
             }
             catch (Exception ex)
