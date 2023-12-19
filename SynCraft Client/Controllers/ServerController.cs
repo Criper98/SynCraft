@@ -3,6 +3,9 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Reflection;
+using Newtonsoft.Json.Linq;
+using Shared;
 
 namespace SynCraftClient.Controllers
 {
@@ -12,15 +15,36 @@ namespace SynCraftClient.Controllers
 
         public void Connect()
         {
-            LogsController.Info("Trying to connect to the server: " + Settings.ServerAddress + ":" + Settings.ServerPort);
+            Shared.Logger.Info("Trying to connect to the server: " + Settings.ServerAddress + ":" + Settings.ServerPort);
 
             ServerModel.Client = new TcpClient(Settings.ServerAddress, Settings.ServerPort);
             ServerModel.DataStream = ServerModel.Client.GetStream();
 
+            try
+            {
+                JObject json = JObject.FromObject(Assembly.GetEntryAssembly().GetName().Version);
+
+                SendString(json.ToString());
+                RecvString(out string data);
+
+                json = JObject.Parse(data);
+
+                if ((bool)json["IsCompatible"])
+                {
+                    Logger.Error("This version of SynCraft it's not compatible with the server. " +
+                        "Please download SynCraft " + json["CompatibleVersion"] + " to fix this error.");
+
+                    //TODO: Implement auto-update/downgrade
+
+                    Disconnect();
+                }
+            }
+            catch { Disconnect(); }
+
             ServerModel.IpPort = ((IPEndPoint)ServerModel.Client.Client.RemoteEndPoint).Address.ToString() + 
                 ":" + ((IPEndPoint)ServerModel.Client.Client.RemoteEndPoint).Port.ToString();
 
-            LogsController.Info("Connected to server: " + ServerModel.IpPort);
+            Shared.Logger.Info("Connected to server: " + ServerModel.IpPort);
         }
 
         public void Disconnect()
@@ -28,7 +52,7 @@ namespace SynCraftClient.Controllers
             ServerModel.DataStream.Close();
             ServerModel.Client.Close();
 
-            LogsController.Info("Disconnected from server");
+            Shared.Logger.Info("Disconnected from server");
         }
 
         public void SendString(string message)
@@ -43,7 +67,7 @@ namespace SynCraftClient.Controllers
             }
             catch (Exception ex)
             {
-                LogsController.Error("Error while sending data to the server: " + ex.Message);
+                Shared.Logger.Error("Error while sending data to the server: " + ex.Message);
             }
         }
 
@@ -76,7 +100,7 @@ namespace SynCraftClient.Controllers
             }
             catch (Exception ex)
             {
-                LogsController.Error("Error while receiving data from the server: " + ex.Message);
+                Shared.Logger.Error("Error while receiving data from the server: " + ex.Message);
             }
         }
     }

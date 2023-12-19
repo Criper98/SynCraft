@@ -22,7 +22,7 @@ namespace SynCraftClient.Controllers
 			try { SessionModel.ServerManager.Connect(); }
 			catch (Exception ex)
 			{ 
-				LogsController.Error("Error while connecting to the server: " + ex.Message);
+				Shared.Logger.Error("Error while connecting to the server: " + ex.Message);
 				return;
 			}
 
@@ -37,7 +37,7 @@ namespace SynCraftClient.Controllers
             if (Settings.SyncKeymap)
                 RecieveKeymap();
 
-            LogsController.Info("Synchronization completed");
+            Shared.Logger.Info("Synchronization completed");
             SessionModel.ServerManager.SendString("Disconnect");
             SessionModel.ServerManager.Disconnect();
 		}
@@ -49,7 +49,7 @@ namespace SynCraftClient.Controllers
 
 			if (buff != "OK")
 			{
-				LogsController.Info("Skipping mods synchronization, disabled by the server");
+                Shared.Logger.Info("Skipping mods synchronization, disabled by the server");
 				return;
 			}
 
@@ -67,7 +67,7 @@ namespace SynCraftClient.Controllers
 				if (buff == "END")
 					break;
 
-				LogsController.Info("Downloading mod " + buff);
+                Shared.Logger.Info("Downloading mod " + buff);
 
                 SessionModel.ServerManager.RecvBytes(out byte[] fileContent);
 
@@ -84,11 +84,11 @@ namespace SynCraftClient.Controllers
 
             if (buff != "OK")
             {
-                LogsController.Info("Skipping config synchronization, disabled by the server");
+                Shared.Logger.Info("Skipping config synchronization, disabled by the server");
                 return;
             }
 
-            LogsController.Info("Downloading config");
+            Shared.Logger.Info("Downloading config");
 
             string configPath = Settings.MinecraftPath + "\\config";
 
@@ -115,11 +115,11 @@ namespace SynCraftClient.Controllers
 
             if (buff != "OK")
             {
-                LogsController.Info("Skipping forge synchronization, disabled by the server");
+                Shared.Logger.Info("Skipping forge synchronization, disabled by the server");
                 return;
             }
 
-            LogsController.Info("Downloading forge");
+            Shared.Logger.Info("Downloading forge");
 
             SessionModel.ServerManager.RecvString(out string lastVersionId);
             SessionModel.ServerManager.RecvBytes(out byte[] zipFile);
@@ -155,11 +155,11 @@ namespace SynCraftClient.Controllers
 
             if (buff != "OK")
             {
-                LogsController.Info("Skipping shaders synchronization, disabled by the server");
+                Shared.Logger.Info("Skipping shaders synchronization, disabled by the server");
                 return;
             }
 
-            LogsController.Info("Downloading shaders");
+            Shared.Logger.Info("Downloading shaders");
 
             string shadersPath = Settings.MinecraftPath + "\\shaderpacks";
 
@@ -173,14 +173,14 @@ namespace SynCraftClient.Controllers
                 if (buff == "END")
                     break;
 
-                LogsController.Info("Downloading shader " + buff);
+                Shared.Logger.Info("Downloading shader " + buff);
 
                 SessionModel.ServerManager.RecvBytes(out byte[] fileContent);
 
                 if (!File.Exists(shadersPath + "\\" + buff))
                     File.WriteAllBytes(shadersPath + "\\" + buff, fileContent);
                 else
-                    LogsController.Warn("Skipping shader " + buff + ", already exist");
+                    Shared.Logger.Warn("Skipping shader " + buff + ", already exist");
 
                 SessionModel.ServerManager.SendString("OK");
             }
@@ -193,11 +193,11 @@ namespace SynCraftClient.Controllers
 
             if (buff != "OK")
             {
-                LogsController.Info("Skipping Keymap synchronization, disabled by the server");
+                Shared.Logger.Info("Skipping Keymap synchronization, disabled by the server");
                 return;
             }
 
-            LogsController.Info("Downloading Keymap");
+            Shared.Logger.Info("Downloading Keymap");
 
             SessionModel.ServerManager.RecvString(out buff);
 
@@ -208,7 +208,7 @@ namespace SynCraftClient.Controllers
 
             Dictionary<string, string> optionsToMerge = JsonConvert.DeserializeObject<Dictionary<string, string>>(buff);
 
-            MCoptionsController.MergeAndWrite(keymapPath, optionsToMerge);
+            Shared.McOptions.MergeAndWrite(keymapPath, optionsToMerge);
         }
     }
 }

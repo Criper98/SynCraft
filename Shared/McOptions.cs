@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace SynCraftClient.Controllers
+namespace Shared
 {
-    internal class MCoptionsController
+    public class McOptions
     {
-        private static Dictionary<string, string> Get(string filePath)
+        public static Dictionary<string, string> Get(string filePath)
         {
             Dictionary<string, string> options = [];
             string fileContent = File.ReadAllText(filePath);

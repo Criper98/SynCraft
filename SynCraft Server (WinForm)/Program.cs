@@ -1,9 +1,4 @@
-using SynCraftClient.Controllers;
-using SynCraftClient.Models;
-using System;
-using System.Windows.Forms;
-
-namespace SynCraftClient
+namespace SynCraft_Server__WinForm_
 {
     internal static class Program
     {
@@ -13,9 +8,6 @@ namespace SynCraftClient
         [STAThread]
         static void Main()
         {
-            SettingsController.Read();
-            Shared.Logger.LogToFile = Settings.LogToFile;
-
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();

@@ -5,6 +5,10 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SynCraft Client", "SynCraft Client\SynCraft Client.csproj", "{7C8DFEDD-1503-470F-B7B9-6F4BE7C63DE0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{666B3FB6-15ED-4B16-B083-B432C62E3CC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynCraft Server (WinForm)", "SynCraft Server (WinForm)\SynCraft Server (WinForm).csproj", "{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{7C8DFEDD-1503-470F-B7B9-6F4BE7C63DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C8DFEDD-1503-470F-B7B9-6F4BE7C63DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C8DFEDD-1503-470F-B7B9-6F4BE7C63DE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{666B3FB6-15ED-4B16-B083-B432C62E3CC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{666B3FB6-15ED-4B16-B083-B432C62E3CC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{666B3FB6-15ED-4B16-B083-B432C62E3CC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{666B3FB6-15ED-4B16-B083-B432C62E3CC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
