@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SynCraftClient.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
@@ -35,6 +37,7 @@ namespace SynCraftClient.Controllers
             if (Settings.SyncKeymap)
                 RecieveKeymap();
 
+            LogsController.Info("Synchronization completed");
             SessionModel.ServerManager.SendString("Disconnect");
             SessionModel.ServerManager.Disconnect();
 		}
@@ -200,7 +203,12 @@ namespace SynCraftClient.Controllers
 
             string keymapPath = Settings.MinecraftPath + "\\options.txt";
 
-            // The plan is to bind only the keys assigned to mods
+            if (!File.Exists(keymapPath))
+                return;
+
+            Dictionary<string, string> optionsToMerge = JsonConvert.DeserializeObject<Dictionary<string, string>>(buff);
+
+            MCoptionsController.MergeAndWrite(keymapPath, optionsToMerge);
         }
     }
 }
