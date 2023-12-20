@@ -10,21 +10,19 @@ namespace SynCraftClient.Controllers
 {
 	internal class SessionController
 	{
-		private readonly Session SessionModel = new();
-
-		public SessionController()
-		{
-            SessionModel.ServerManager = new ServerController();
-		}
+		private readonly Shared.TcpManager Tcp = new();
 
 		public void Start()
 		{
-			try { SessionModel.ServerManager.Connect(); }
+			try { Tcp.ConnectToServer(Settings.ServerAddress, Settings.ServerPort); }
 			catch (Exception ex)
 			{ 
 				Shared.Logger.Error("Error while connecting to the server: " + ex.Message);
 				return;
 			}
+
+            if (!Tcp.Client.Connected)
+                return;
 
 			if (Settings.SyncMods)
 				RecieveMods();
@@ -38,14 +36,14 @@ namespace SynCraftClient.Controllers
                 RecieveKeymap();
 
             Shared.Logger.Info("Synchronization completed");
-            SessionModel.ServerManager.SendString("Disconnect");
-            SessionModel.ServerManager.Disconnect();
+            Tcp.SendString("Disconnect");
+            Tcp.Disconnect();
 		}
 
 		private void RecieveMods()
 		{
-            SessionModel.ServerManager.SendString("GetMods");
-            SessionModel.ServerManager.RecvString(out string buff);
+            Tcp.SendString("GetMods");
+            string buff = Tcp.RecvString();
 
 			if (buff != "OK")
 			{
@@ -62,25 +60,25 @@ namespace SynCraftClient.Controllers
 
 			while (true)
 			{
-                SessionModel.ServerManager.RecvString(out buff);
+                buff = Tcp.RecvString();
 
 				if (buff == "END")
 					break;
 
                 Shared.Logger.Info("Downloading mod " + buff);
 
-                SessionModel.ServerManager.RecvBytes(out byte[] fileContent);
+                byte[] fileContent = Tcp.RecvBytes();
 
 				File.WriteAllBytes(modsPath + "\\" + buff, fileContent);
 
-                SessionModel.ServerManager.SendString("OK");
+                Tcp.SendString("OK");
 			}
 		}
 
 		private void RecieveConfig()
 		{
-            SessionModel.ServerManager.SendString("GetConfig");
-            SessionModel.ServerManager.RecvString(out string buff);
+            Tcp.SendString("GetConfig");
+            string buff = Tcp.RecvString();
 
             if (buff != "OK")
             {
@@ -97,7 +95,7 @@ namespace SynCraftClient.Controllers
 
             Directory.CreateDirectory(configPath);
 
-            SessionModel.ServerManager.RecvBytes(out byte[] zipFile);
+            byte[] zipFile = Tcp.RecvBytes();
 
 			string zipPath = Directory.GetCurrentDirectory() + "\\config.zip";
 
@@ -110,8 +108,8 @@ namespace SynCraftClient.Controllers
 
 		private void RecieveForge()
 		{
-            SessionModel.ServerManager.SendString("GetForge");
-            SessionModel.ServerManager.RecvString(out string buff);
+            Tcp.SendString("GetForge");
+            string buff = Tcp.RecvString();
 
             if (buff != "OK")
             {
@@ -121,8 +119,8 @@ namespace SynCraftClient.Controllers
 
             Shared.Logger.Info("Downloading forge");
 
-            SessionModel.ServerManager.RecvString(out string lastVersionId);
-            SessionModel.ServerManager.RecvBytes(out byte[] zipFile);
+            string lastVersionId = Tcp.RecvString();
+            byte[] zipFile = Tcp.RecvBytes();
 
             string zipPath = Directory.GetCurrentDirectory() + "\\forge.zip";
 
@@ -150,8 +148,8 @@ namespace SynCraftClient.Controllers
 
 		private void RecieveShaders()
 		{
-            SessionModel.ServerManager.SendString("GetShaders");
-            SessionModel.ServerManager.RecvString(out string buff);
+            Tcp.SendString("GetShaders");
+            string buff = Tcp.RecvString();
 
             if (buff != "OK")
             {
@@ -168,28 +166,28 @@ namespace SynCraftClient.Controllers
 
             while (true)
             {
-                SessionModel.ServerManager.RecvString(out buff);
+                buff = Tcp.RecvString();
 
                 if (buff == "END")
                     break;
 
                 Shared.Logger.Info("Downloading shader " + buff);
 
-                SessionModel.ServerManager.RecvBytes(out byte[] fileContent);
+                byte[] fileContent = Tcp.RecvBytes();
 
                 if (!File.Exists(shadersPath + "\\" + buff))
                     File.WriteAllBytes(shadersPath + "\\" + buff, fileContent);
                 else
                     Shared.Logger.Warn("Skipping shader " + buff + ", already exist");
 
-                SessionModel.ServerManager.SendString("OK");
+                Tcp.SendString("OK");
             }
         }
 
         private void RecieveKeymap()
         {
-            SessionModel.ServerManager.SendString("GetKeymap");
-            SessionModel.ServerManager.RecvString(out string buff);
+            Tcp.SendString("GetKeymap");
+            string buff = Tcp.RecvString();
 
             if (buff != "OK")
             {
@@ -199,7 +197,7 @@ namespace SynCraftClient.Controllers
 
             Shared.Logger.Info("Downloading Keymap");
 
-            SessionModel.ServerManager.RecvString(out buff);
+            buff = Tcp.RecvString();
 
             string keymapPath = Settings.MinecraftPath + "\\options.txt";
 

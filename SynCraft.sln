@@ -5,9 +5,14 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SynCraft Client", "SynCraft Client\SynCraft Client.csproj", "{7C8DFEDD-1503-470F-B7B9-6F4BE7C63DE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{666B3FB6-15ED-4B16-B083-B432C62E3CC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{666B3FB6-15ED-4B16-B083-B432C62E3CC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynCraft Server (WinForm)", "SynCraft Server (WinForm)\SynCraft Server (WinForm).csproj", "{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SynCraft Server (WinForm)", "SynCraft Server (WinForm)\SynCraft Server (WinForm).csproj", "{1E852E20-B36D-4B47-801C-D6ACFB9F9E5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C3B2325-770C-40F8-9BD5-E0581497614A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
